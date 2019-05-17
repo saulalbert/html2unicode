@@ -7,10 +7,10 @@ const Saxophone = require('saxophone');
  * @returns {Promise<String>} an unicode string.
  *
  * @example
- *     await h2unicode("Hello, <b>world</b> !");
+ *     await html2unicode("Hello, <b>world</b> !");
  *     // --> "Hello, 𝘄𝗼𝗿𝗹𝗱!"
  **/
-function h2unicode(html) {
+function html2unicode(html) {
 	const chunks = [];
 	const parser = new Saxophone();
 	let tags = {
@@ -218,7 +218,7 @@ const superscript = transformator(CharTransform.superscriptTransform);
 
 if (typeof module !== "undefined") {
 	module.exports = {
-		h2unicode, transform, bolden, italicize, boldenAndItalicize, monospace,
+		html2unicode, transform, bolden, italicize, boldenAndItalicize, monospace,
 		scriptize, subscript, superscript,
 	};
 }
