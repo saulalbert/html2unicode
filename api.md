@@ -39,6 +39,11 @@ transform("world", {bold: true});
 ```
 **Example**  
 ```js
+transform("world", {underline: true});
+     // --> "w̲o̲r̲l̲d̲"
+```
+**Example**  
+```js
 transform("world", {bold: true, italics: true});
      // --> "𝙬𝙤𝙧𝙡𝙙"
 ```

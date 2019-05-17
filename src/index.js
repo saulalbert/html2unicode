@@ -7,15 +7,16 @@ const Saxophone = require('saxophone');
  * @returns {Promise<String>} an unicode string.
  *
  * @example
- *     await html2unicode("Hello, <b>world</b> !");
+ *     await h2unicode("Hello, <b>world</b> !");
  *     // --> "Hello, 𝘄𝗼𝗿𝗹𝗱!"
  **/
-function html2unicode(html) {
+function h2unicode(html) {
 	const chunks = [];
 	const parser = new Saxophone();
 	let tags = {
 		"i": 0, "em":0,
 		"b":0, "strong": 0,
+		"u": 0,
 		"pre": 0, "code": 0, "tt": 0, "samp": 0, "kbd": 0,
 		"var": 0,
 		"sub": 0,
@@ -33,6 +34,7 @@ function html2unicode(html) {
 	});
 	const state = {
 		bold: false,
+		underline: false,
 		italics: false,
 		mono: false,
 		variable: false,
@@ -41,6 +43,7 @@ function html2unicode(html) {
 	};
 	parser.on('text', ({ contents }) => {
 		state.bold = tags.b>0 || tags.strong>0;
+		state.underline = tags.u>0;
 		state.italics = tags.i>0 || tags.em>0;
 		state.mono = tags.code>0 || tags.tt>0 || tags.pre>0 || tags.samp>0 || tags.kbd>0;
 		state.variable = tags['var']>0;
@@ -65,6 +68,10 @@ function html2unicode(html) {
  *      // --> "𝘄𝗼𝗿𝗹𝗱"
  *
  * @example
+ *     transform("world", {underline: true});
+ *      // --> "w̲o̲r̲l̲d̲"
+ *
+ * @example
  *     transform("world", {bold: true, italics: true});
  *      // --> "𝙬𝙤𝙧𝙡𝙙"
  *
@@ -76,12 +83,13 @@ function html2unicode(html) {
  *     transform("text", {mono: true});
  *      // --> "𝚝𝚎𝚡𝚝"
  **/
-function transform(text, { bold, italics, mono, variable, sub, sup }) {
+function transform(text, { bold, underline, italics, mono, variable, sub, sup }) {
 	text = text.normalize("NFKD");
 	if (sub) text = subscript(text);
 	else if (sup) text = superscript(text);
 	else if (bold && italics) text = boldenAndItalicize(text);
 	else if (bold) text = bolden(text);
+	else if (underline) text = text.replace(/(.{1})/g,"$1\u0332")
 	else if (italics) text = italicize(text);
 	else if (mono) text = monospace(text);
 	else if (variable) text = scriptize(text);
@@ -134,6 +142,7 @@ CharTransform.boldenTransforms = [
 	new SmallLetterTransform('𝗮'),
 	new DigitTransform('𝟬'),
 ];
+
 
 CharTransform.italicizeTransform = [
 	new CapitalLetterTransform('𝘈'),
@@ -209,7 +218,7 @@ const superscript = transformator(CharTransform.superscriptTransform);
 
 if (typeof module !== "undefined") {
 	module.exports = {
-		html2unicode, transform, bolden, italicize, boldenAndItalicize, monospace,
+		h2unicode, transform, bolden, italicize, boldenAndItalicize, monospace,
 		scriptize, subscript, superscript,
 	};
 }

@@ -14,6 +14,7 @@ You can [try this library online](https://npm.runkit.com/html2unicode).
 | html | html2unicode(html) |
 |------|--------------------|
 |`<b>Hello</b>` | 𝗛𝗲𝗹𝗹𝗼|
+|`<u>Hello</u>` | H̲e̲l̲l̲o̲|
 |`<strong>Hello, world!</strong>` | 𝗛𝗲𝗹𝗹𝗼, 𝘄𝗼𝗿𝗹𝗱!|
 |`<em>hello</em>` | 𝘩𝘦𝘭𝘭𝘰|
 |`normal <i>italics <b>bolditalics</b></i>` | normal 𝘪𝘵𝘢𝘭𝘪𝘤𝘴 𝙗𝙤𝙡𝙙𝙞𝙩𝙖𝙡𝙞𝙘𝙨|
